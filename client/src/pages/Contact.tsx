@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { useState } from 'react';
 
 // Interface untuk form data
 interface ContactFormData {

@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "engines": {
-    "node": "24.x"
-  },
   "scripts": {
     "dev": "bun run api/index.js",
     "start": "node api/index.js"

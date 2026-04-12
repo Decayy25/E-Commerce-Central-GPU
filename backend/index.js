@@ -3,6 +3,7 @@ import { cors } from "@elysiajs/cors";
 import { register, login, getAccounts } from "./middleware/auth.js";
 import { usersCollection } from './config/db.js';
 import { sendContactMail } from "./utils/sendMail.js";
+import { addProduct, getProduct } from "./controller/product.js";
 import dotenv from "dotenv";
 import path from "path";
 
@@ -40,7 +41,7 @@ const app = new Elysia()
             )
             .group("/product", (app) => 
                 app
-                    .get('/get', async () => await getProduct())
+                    .get('/get', async ({ body }) => await getProduct(body))
                     .post('/add', async ({ body }) => await addProduct(body))
                 )
 

@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, Dispatch, SetStateAction } from 'react';
 import { useNavigate } from "react-router-dom";
 import { FormField } from '../molecules/FormField';
 import { Button } from '../atoms/Button';
 import { login } from '../../api/api';
 
-export const LoginForm: React.FC = () => {
+// 1. Definisikan Interface Props
+interface LoginFormProps {
+  setToken: Dispatch<SetStateAction<string | null>>;
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({ setToken }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState<string | null>(null);
@@ -16,7 +21,9 @@ export const LoginForm: React.FC = () => {
     try {
       const data = await login(email, password);
       localStorage.setItem('token', data.token);
-      console.log('User yang masuk:', data.username);
+      setToken(data.token); 
+      console.log('User yang masuk:', data.username); 
+
       navigate('/');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'An error occurred')

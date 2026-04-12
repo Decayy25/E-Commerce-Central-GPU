@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 // Client Components
 import Header from "./components/organisms/Header";
 import Footer from "./components/organisms/Footer";
-import Cart from "./components/organisms/CartOrder";
+// import Cart from "./components/organisms/CartOrder";
 
 // Pages
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import Contact from "./pages/Contact";
+// import Contact from "./pages/Contact";
 import Shop from "./pages/Shop";
 
 

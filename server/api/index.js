@@ -11,7 +11,7 @@ import { error } from "console";
 
 if (process.env.NODE_ENV !== 'production') {
   dotenv.config({
-    path: path.resolve(process.cwd(), "../.env")
+    path: path.resolve(process.cwd(), "../../.env")
   });
 }
 
@@ -46,12 +46,6 @@ const app = new Elysia()
                 app
                     .get('/get', async () => await getProduct())
                 )
-
-
-
-
-
-
 
             .get("/me", async ({ query }) => {
                 try {

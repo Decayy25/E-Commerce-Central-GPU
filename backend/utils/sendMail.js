@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-import { db } from "../config/db.js"
 
 export async function sendContactMail({ name, email, message }) {
     const transporter = nodemailer.createTransport({
@@ -23,28 +22,4 @@ export async function sendContactMail({ name, email, message }) {
             <p>${message}</p>
         `
     });
-}
-
-export async function mailHistory(body) {
-    try {
-        const result = await db.collection("contacts").insertOne({
-            name: body.name,
-            email: body.email,
-            message: body.message,
-            createdAt: new Date()
-        });
-
-        return {
-            success: true,
-            message: "Pesan berhasil dikirim",
-            id: result.insertedId
-        };
-
-    } catch (err) {
-        console.error("CONTACT ERROR:", err);
-        return {
-            success: false,
-            error: err.message
-        };
-    }
 }

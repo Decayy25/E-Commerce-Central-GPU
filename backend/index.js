@@ -1,13 +1,17 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
-import { node } from "@elysiajs/node";
-import { usersCollection } from './config/db.js';
-import { sendContactMail, mailHistory } from "./utils/sendMail.js";
-import { getProduct } from "./controller/product.js";
 import { register, login, getAccounts } from "./middleware/auth.js";
-import { error } from "console";
+import { usersCollection } from './config/db.js';
+import { sendContactMail } from "./utils/sendMail.js";
+import dotenv from "dotenv";
+import path from "path";
 
-const PORT = process.env.PORT || 3000;
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({
+    path: path.resolve(process.cwd(), "../.env")
+  });
+}
+
 
 const app = new Elysia()
     .use(cors({
@@ -74,7 +78,7 @@ const app = new Elysia()
         };
     });
 
-export default node(app);
+export default app;
 
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT);

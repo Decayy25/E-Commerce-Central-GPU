@@ -1,3 +1,4 @@
+import { Elysia } from "elysia";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import path from "path";
@@ -7,6 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
     path: path.resolve(process.cwd(), "../.env")
   });
 }
+
 
 const uri = process.env.MONGO_URI;
 

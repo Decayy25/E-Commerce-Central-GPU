@@ -4,7 +4,6 @@ import { FormField } from '../molecules/FormField';
 import { Button } from '../atoms/Button';
 import { login } from '../../api/api';
 
-// 1. Definisikan Interface Props
 interface LoginFormProps {
   setToken: Dispatch<SetStateAction<string | null>>;
 }
@@ -22,7 +21,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setToken }) => {
       const data = await login(email, password);
       localStorage.setItem('token', data.token);
       setToken(data.token); 
-      console.log('User yang masuk:', data.username); 
+      console.log('User yang masuk:', data.user); 
 
       navigate('/');
     } catch (error) {

@@ -1,4 +1,4 @@
-import { Elysia, t } from "elysia";
+import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { usersCollection } from './config/db.js';
 import { sendContactMail, mailHistory } from "./utils/sendMail.js";

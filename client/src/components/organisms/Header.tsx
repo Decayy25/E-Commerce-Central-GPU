@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import feather from 'feather-icons';
+import { Button } from "../atoms/Button"
 
-export default function HeaderClient() {
+export default function Header({ setToken }: { setToken: (token: string | null) => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("userEmail")
+    setToken(null)
+    navigate("/login")
+  }
 
   useEffect(() => {
     feather.replace();
@@ -47,12 +56,13 @@ export default function HeaderClient() {
               Contact
             </Link>
 
-            <Link
-              to="/login"
+            <button
+              type="button"
+              onClick={handleLogout}
               className="bg-white text-[#589c00] px-4 py-2 rounded font-medium hover:bg-green-100 transition"
             >
               Logout
-            </Link>
+            </button>
 
           </nav>
 
@@ -104,12 +114,13 @@ export default function HeaderClient() {
           </li>
 
           <li>
-            <Link
-              to="/register"
-              className="block py-4 px-3 border-b border-[#9ffff5] hover:bg-[#7cffc4] text-lg font-semibold hover:text-[#3079ee]"
+            <Button
+              type="button"
+              onClick={handleLogout}
+              className="block py-2 px-3 mt-2 border-b border-[#9ffff5] hover:bg-[#7cffc4] text-lg font-semibold hover:text-[#3079ee]"
             >
-              SignUp
-            </Link>
+              Logout
+            </Button>
           </li>
 
         </ul>

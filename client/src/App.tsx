@@ -43,7 +43,7 @@ export default function App() {
   
   return (
     <div className="flex flex-col w-full min-h-screen">
-      {!isAuthPage && <Header />}
+      {!isAuthPage && <Header setToken={setToken} />}
 
       <Routes>
         <Route path="/login" element={!token ? <LoginPage setToken={setToken} /> : <Navigate to="/" />} />

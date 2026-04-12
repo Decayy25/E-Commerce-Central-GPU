@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { FormField } from '../molecules/FormField';
 import { Button } from '../atoms/Button';
 import { login } from '../../api/api';
@@ -7,6 +8,7 @@ export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,6 +17,7 @@ export const LoginForm: React.FC = () => {
       const data = await login(email, password);
       localStorage.setItem('token', data.token);
       console.log('User yang masuk:', data.username);
+      navigate('/');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'An error occurred')
     }

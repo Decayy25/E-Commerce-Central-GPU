@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "module": "index.js",
+  "module": "api/index.js",
   "type": "module",
   "private": true,
   "devDependencies": {

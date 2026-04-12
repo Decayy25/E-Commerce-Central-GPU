@@ -4,12 +4,10 @@ import { LoginForm } from '../components/templates/LoginForm';
 import { Button } from '../components/atoms/Button';
 import logo from "../assets/Logo.png"
 
-// 1. Definisikan Interface Props
 interface LoginPageProps {
   setToken: Dispatch<SetStateAction<string | null>>;
 }
 
-// 2. Gunakan interface di React.FC<LoginPageProps>
 const LoginPage: React.FC<LoginPageProps> = ({ setToken }) => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#e5e7eb]">

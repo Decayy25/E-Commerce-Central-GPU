@@ -41,6 +41,7 @@ const app = new Elysia()
             .group("/product", (app) => 
                 app
                     .get('/get', async () => await getProduct())
+                    .post('/add', async ({ body }) => await addProduct(body))
                 )
 
             .get("/me", async ({ query }) => {

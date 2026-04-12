@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { Link } from "react-router-dom";
 import { LoginForm } from '../components/templates/LoginForm';
 import { Button } from '../components/atoms/Button';

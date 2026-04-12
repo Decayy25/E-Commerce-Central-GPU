@@ -9,8 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
-// const uri = process.env.MONGO_URI;
-const uri = "mongodb://localhost:27017/";
+const uri = process.env.MONGO_URI || "mongodb://localhost:27017/";
 
 const client = new MongoClient(uri, {
   serverSelectionTimeoutMS: 10000,

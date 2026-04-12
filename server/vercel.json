@@ -1,14 +1,14 @@
 {
   "version": 2,
   "functions": {
-    "api/index.js": {
+    "index.js": {
         "runtime": "@vercel/node@3.0.0"
     }
   },
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/api/index.js",
+      "dest": "index.js",
       "headers": {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",

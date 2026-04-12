@@ -1,10 +1,10 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { node } from "@elysiajs/node";
-import { usersCollection } from '../config/db.js';
-import { sendContactMail, mailHistory } from "../utils/sendMail.js";
-import { getProduct } from "../controller/product.js";
-import { register, login, getAccounts } from "../middleware/auth.js";
+import { usersCollection } from './config/db.js';
+import { sendContactMail, mailHistory } from "./utils/sendMail.js";
+import { getProduct } from "./controller/product.js";
+import { register, login, getAccounts } from "./middleware/auth.js";
 import dotenv from "dotenv";
 import path from "path";
 import { error } from "console";

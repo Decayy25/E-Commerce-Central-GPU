@@ -1,8 +1,12 @@
 {
   "name": "server",
-  "module": "api/index.js",
+  "module": "index.js",
   "type": "module",
   "private": true,
+  "scripts": {
+    "start": "bun index.js",
+    "dev" : "bun index.js"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },

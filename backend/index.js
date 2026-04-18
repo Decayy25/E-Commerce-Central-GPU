@@ -37,8 +37,9 @@ const app = new Elysia()
                 app
                   .post('/login', async ({ body }) => await login(body))
                   .post('/register', async ({ body }) => await register(body))
-                  .get("/accounts", async () => await getAccounts())
+                  .get('/verify-email', async ({ query }) => { return await verifyEmail(query.token)})
             )
+            .get("/accounts", async () => await getAccounts())
             .group("/product", (app) => 
                 app
                     .get('/get', async () => await getProduct())
@@ -83,11 +84,11 @@ const app = new Elysia()
 export default app;
 
 if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT);
+  app.listen(process.env.PORT);
   console.log(`\x1b[32m
   +==================================================+
   ✅ Elysia Server running!
-  🌐 http://localhost:${PORT}
+  🌐 http://localhost:${process.env.PORT}
   📂 File: index.js
   +==================================================+
 `);

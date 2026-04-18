@@ -9,7 +9,7 @@ export async function getProduct() {
     }
 }
 
-export async function addProduct({ body }) {
+export async function addProduct(body) {
     const { id, name, price, image, category, stock, rating, reviews, description } = body;
                 
     try {

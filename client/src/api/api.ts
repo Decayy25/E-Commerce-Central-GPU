@@ -1,6 +1,6 @@
 export const getProducts = async () => {
     try {
-        const res = await fetch(`${import.meta.env.VITE_API}/api/product/get`, {
+        const res = await fetch(`${import.meta.env.VITE_API}api/product/get`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -38,7 +38,7 @@ export const register = async (
   payload: RegisterPayload
 ): Promise<Response> => {
   const res = await fetch(
-    `${import.meta.env.VITE_API}/api/auth/register`,
+    `${import.meta.env.VITE_API}api/auth/register`,
     {
       method: "POST",
       headers: {
@@ -69,10 +69,10 @@ export interface LoginResponse {
 }
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
-  const res = await fetch(`${import.meta.env.VITE_API}/api/auth/login`, {
+  const res = await fetch(`${import.meta.env.VITE_API}api/auth/login`, {
     method: "POST",
     headers: {
-      "Content-type": "application/json",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password })
   });

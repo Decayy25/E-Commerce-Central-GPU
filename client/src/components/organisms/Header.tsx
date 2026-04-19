@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import type { Account } from "../../types/type";
 import feather from 'feather-icons';
 import { Button } from "../atoms/Button"
 
-export default function Header({ setToken }: { setToken: (token: string | null) => void }) {
+interface HeaderProps {
+  setToken: (token: string | null) => void;
+  account: Account | null;
+}
+
+export default function Header({ setToken, account }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 

@@ -85,3 +85,21 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 
   return data;
 };
+
+
+export const getAccount = async (token: string) => {
+  const res = await fetch(`${import.meta.env.VITE_API}api/Accounts`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  })
+
+  if(!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Gagal mengambil data akun")
+  }
+
+  return await res.json();
+}

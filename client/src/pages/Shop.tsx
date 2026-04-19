@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import feather from 'feather-icons';
 import { getProducts } from "../api/api"
+import type { Product, Account } from "../types/type";
 
-export default function Shop() {
+export default function Shop({ account }: { account: Account | null }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [cart, setCart] = useState<Product[]>([]);
@@ -13,17 +14,7 @@ export default function Shop() {
         (selectedCategory === "All" || product.category === selectedCategory)
     );
 
-    interface Product {
-        id: number;
-        name: string;
-        price: number;
-        image: string;
-        category: string;
-        stock: number;
-        rating: number;
-        reviews: number;
-        description: string;
-    }
+    
 
         const handleAddToCart = (productId: number) => {
             const product: Product | undefined = products.find(p => p.id === productId);

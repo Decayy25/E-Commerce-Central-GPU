@@ -140,9 +140,9 @@ export async function getAccounts(body) {
 
     const authHeader = body.headers.get("Authorization");
 
-    if (!authHeader) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return Response.json(
-        { message: "Token tidak ditemukan" },
+        { message: "Format token salah atau tidak ditemukan" },
         { status: 401 }
       );
     }
@@ -158,16 +158,26 @@ export async function getAccounts(body) {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await db.collection("users")
-      .findOne({}, {
-        projection: {
-          _id: 0,
+    const user = await db.collection("users").findOne(
+      { email: decoded.email },
+      { projection: { 
+          _id: 0, 
+          email: 1, 
           username: 1,
-          email: 1,
-          createdAt: 1
-      }}).toarray();
+          createdAt: 1 ,
+          isVerified: 1
+        }
+      }
+    );
 
-      return Response.json(users);
+    if (!user) {
+      return Response.json(
+        { message: "User tidak ditemukan" },
+        { status: 404 }
+      );
+    }
+
+      return Response.json(user);
   } catch (err) {
     return Response.json(
       { message: "token tidak valid" },

@@ -39,7 +39,7 @@ const app = new Elysia()
                   .post('/register', async ({ body }) => await register(body))
                   .get('/verify-email', async ({ query }) => { return await verifyEmail(query.token)})
             )
-            .get("/accounts", async () => await getAccounts())
+            .get("/accounts", async ({ body }) => await getAccounts(body))
             .group("/product", (app) => 
                 app
                     .get('/get', async () => await getProduct())

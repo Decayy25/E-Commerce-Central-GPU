@@ -56,11 +56,11 @@ export const RegisterForm: React.FC = () => {
   };
 
   const Icon = {
-    profile: <i className="fas fa-user-circle profile-icon text-[var(--Radeon--)]"></i>,
-    email: <i className="fa-regular fa-envelope text-[var(--Radeon--)]"></i>,
-    phone: <i className="fa-solid fa-phone text-[var(--Radeon--)]"></i>,
-    calendar: <i className="fa-solid fa-calendar text-[var(--Radeon--)]"></i>,
-    password: <i className="fa-solid fa-eye text-[var(--Radeon--)]"></i>
+    profile: <i className="fas fa-user-circle profile-icon text-var(--Radeon--)"></i>,
+    email: <i className="fa-regular fa-envelope text-var(--Radeon--)"></i>,
+    phone: <i className="fa-solid fa-phone text-var(--Radeon--)"></i>,
+    calendar: <i className="fa-solid fa-calendar text-var(--Radeon--)"></i>,
+    password: <i className="fa-solid fa-eye text-var(--Radeon--)"></i>
   };
 
   return (

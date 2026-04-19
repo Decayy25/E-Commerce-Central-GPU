@@ -31,8 +31,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setToken }) => {
   };
 
   const Icon = {
-    email: <i className="fa-regular fa-envelope text-[var(--Radeon--)]"></i>,
-    password: <i className="fa-solid fa-eye text-[var(--Radeon--)]"></i>
+    email: <i className="fa-regular fa-envelope text-var(--Radeon--)"></i>,
+    password: <i className="fa-solid fa-eye text-var(--Radeon--)"></i>
   };
 
   return (

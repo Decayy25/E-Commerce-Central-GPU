@@ -1,10 +1,27 @@
-import React from 'react';
+import { Fragment } from "react";
+import type { InputProps } from "../../types/TypeUI";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
-
-export const Input: React.FC<InputProps> = ({ ...props }) => (
-  <input
-    {...props}
-    className="w-full py-3 px-5 rounded-full bg-[#6ba4d9] text-white placeholder-blue-100 outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] transition-all focus:ring-2 focus:ring-blue-400"
-  />
-);
+export default function Input(props: InputProps) {
+  const {
+    name,
+    type = "text",
+    placeholder = "Title",
+    value,
+    onChange,
+    className = "w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-600",
+  } = props;
+  return (
+    <Fragment>
+      <div>
+        <input
+          name={name}
+          type={type}
+          className={className}
+          onChange={onChange}
+          placeholder={placeholder}
+          value={value}
+        />
+      </div>
+    </Fragment>
+  );
+}

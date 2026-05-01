@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getAccount } from "./api/api";
-import type { Account } from "./types/type";
+import { getAccounts } from "./api/api";
+import type { Account } from "./types/TypeAuth";
 
 // Components & Pages
 import Header from "./components/organisms/Header";
@@ -26,22 +26,13 @@ export default function App() {
   useEffect(() => {
     AOS.init({ duration: 800, easing: "ease-in-out", once: false});
     feather.replace();
-  
-    const fetchUserData = async () => {
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-        try {
-          const userData = await getAccount(storedToken);
-          setAccount(userData);
-        } catch (err) {
-          console.error("Gagal mengambil data akun:", err);
-          localStorage.removeItem("token");
-          setToken(null);
-        }
-      }
-    };
 
-    fetchUserData();
+    (async () => {
+      const sharedToken = localStorage.getItem("token");
+      if (!sharedToken) return;
+      const data = await getAccounts();
+      setAccount(data);
+    })();
   }, [token]);
 
   const hiddenHeaderFooter = ["/login", "/register"];

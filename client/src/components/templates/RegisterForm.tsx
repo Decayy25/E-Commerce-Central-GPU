@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FormField } from '../molecules/FormField';
-import { Button } from '../atoms/Button';
-import { register } from '../../api/api';
-import type { RegisterPayload } from '../../api/api';
+import { FormField } from "../molecules/FormField";
+import { Button } from "../atoms/Button";
+import { register } from "../../api/api";
+import type { RegisterPayload } from "../../types/TypeAuth";
 
 export const RegisterForm: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -11,12 +11,12 @@ export const RegisterForm: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<RegisterPayload>({
-    username: '',
-    email: '',
-    phone: '',
-    birthday: '',
-    password: '',
-    confirmPassword: ''
+    username: "",
+    email: "",
+    phone: "",
+    birthday: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,12 +39,12 @@ export const RegisterForm: React.FC = () => {
 
       // Reset form setelah berhasil
       setFormData({
-        username: '',
-        email: '',
-        phone: '',
-        birthday: '',
-        password: '',
-        confirmPassword: ''
+        username: "",
+        email: "",
+        phone: "",
+        birthday: "",
+        password: "",
+        confirmPassword: "",
       });
 
       setStep(1);
@@ -56,11 +56,13 @@ export const RegisterForm: React.FC = () => {
   };
 
   const Icon = {
-    profile: <i className="fas fa-user-circle profile-icon text-var(--Radeon--)"></i>,
-    email: <i className="fa-regular fa-envelope text-var(--Radeon--)"></i>,
-    phone: <i className="fa-solid fa-phone text-var(--Radeon--)"></i>,
-    calendar: <i className="fa-solid fa-calendar text-var(--Radeon--)"></i>,
-    password: <i className="fa-solid fa-eye text-var(--Radeon--)"></i>
+    profile: (
+      <i className="fas fa-user-circle profile-icon text-[var(--Radeon--)]"></i>
+    ),
+    email: <i className="fa-regular fa-envelope text-[var(--Radeon--)]"></i>,
+    phone: <i className="fa-solid fa-phone text-[var(--Radeon--)]"></i>,
+    calendar: <i className="fa-solid fa-calendar text-[var(--Radeon--)]"></i>,
+    password: <i className="fa-solid fa-eye text-[var(--Radeon--)]"></i>,
   };
 
   return (
@@ -108,7 +110,9 @@ export const RegisterForm: React.FC = () => {
             <div className="text-[11px] text-blue-500">
               Already have an account?
               <Button variant="link">
-                <Link to={"/login"} className='p-2'>Login</Link>
+                <Link to={"/login"} className="p-2">
+                  Login
+                </Link>
               </Button>
             </div>
             <div className="w-full flex justify-end mt-4">
@@ -136,7 +140,9 @@ export const RegisterForm: React.FC = () => {
           />
 
           {message && (
-            <p className="text-sm text-center text-var(--Radeon--)">{message}</p>
+            <p className="text-sm text-center text-var(--Radeon--)">
+              {message}
+            </p>
           )}
 
           <div className="pt-10">

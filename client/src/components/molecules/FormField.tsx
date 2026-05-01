@@ -1,14 +1,6 @@
-import React from 'react';
-import { Input } from '../atoms/Input';
-
-interface FormFieldProps {
-  name: string,
-  type: string;
-  placeholder: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  icon: React.ReactNode;
-}
+import React from "react";
+import Input from "../atoms/Input";
+import type { FormFieldProps } from "../../types/TypeUI";
 
 export const FormField: React.FC<FormFieldProps> = ({ icon, ...props }) => (
   <div className="relative w-full">

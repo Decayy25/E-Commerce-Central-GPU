@@ -23,7 +23,6 @@ export async function register(body) {
 
     const hashed = await bcrypt.hash(body.password, 10);
 
-    // Token verifikasi email
     const verificationToken = jwt.sign(
       { email: body.email },
       process.env.JWT_SECRET,
@@ -36,7 +35,7 @@ export async function register(body) {
       phone: body.phone,
       birthday: body.birthday,
       password: hashed,
-      isVerified: false,
+      isVerified: true, // Set to true for testing, change to false in production
       verificationToken,
       createdAt: new Date(),
     });
@@ -44,7 +43,7 @@ export async function register(body) {
     await sendVerificationEmail(body.email, verificationToken);
 
     return {
-      status: 201,
+      status: 200,
       message: "Registrasi berhasil. Silakan cek email untuk verifikasi."
     };
 
@@ -91,7 +90,7 @@ export async function login(body) {
 
     if (!user || !user.isVerified) {
       return Response.json(
-        { message: "Email atau password salah" },
+        { message: "Akun belum di Verifikasi" },
         { status: 401 }
       );
     }

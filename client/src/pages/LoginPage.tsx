@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { Link } from "react-router-dom";
 import { LoginForm } from '../components/templates/LoginForm';
-import { Button } from '../components/atoms/Button';
+import Button from '../components/atoms/Button';
 import logo from "../assets/Logo.png"
 
 interface LoginPageProps {

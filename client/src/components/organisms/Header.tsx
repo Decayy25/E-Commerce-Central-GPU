@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import type { Account } from "../../types/TypeAuth";
 import feather from 'feather-icons';
-import { Button } from "../atoms/Button"
+import Button from "../atoms/Button"
 
 interface HeaderProps {
   setToken: (token: string | null) => void;

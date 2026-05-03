@@ -44,6 +44,11 @@ const app = new Elysia()
                 app
                     .get('/get', async () => await getProduct())
                     .post('/add', async ({ body }) => await addProduct(body))
+                    .post('/pay', async ({ body }) => {
+                        // Simulasi proses pembayaran
+                        console.log("Processing payment for order:", body);
+                        return { success: true, message: "Payment processed successfully" };
+                    }
                 )
 
             .get("/me", async ({ query }) => {

@@ -1,22 +1,28 @@
-import { useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import Label from "../atoms/Label";
 import Layout from "../molecules/Layout";
 
-export default function Category() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+interface CategoryProps {
+  selectedCategory: string;
+  onSelectCategory: (category: string) => void;
+}
+
+export default function Category({
+  selectedCategory,
+  onSelectCategory,
+}: CategoryProps) {
   return (
     <Fragment>
       <Layout className="none">
         <Label
           className={"font-medium text-gray-700"}
-          Title={"Category:"}
-          htmlFor="none"
+          htmlfor="category-select"
         />
 
         <select
+          id="category-select"
           value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
+          onChange={(e) => onSelectCategory(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-green-600"
         >
           <option value="All">All</option>

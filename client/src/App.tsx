@@ -9,6 +9,7 @@ import Footer from "./components/organisms/Footer";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Shop from "./pages/Shop";
+import CartOrder from "./components/organisms/CartOrder";
 
 // Desain & Library
 import feather from "feather-icons";
@@ -17,14 +18,13 @@ import "./index.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-
 export default function App() {
   const [account, setAccount] = useState<Account | null>(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const location = useLocation();
 
   useEffect(() => {
-    AOS.init({ duration: 800, easing: "ease-in-out", once: false});
+    AOS.init({ duration: 800, easing: "ease-in-out", once: false });
     feather.replace();
 
     (async () => {
@@ -35,7 +35,7 @@ export default function App() {
     })();
   }, [token]);
 
-  const hiddenHeaderFooter = ["/login", "/register"];
+  const hiddenHeaderFooter = ["/login", "/register", "/cart"];
   const isAuthPage = hiddenHeaderFooter.includes(location.pathname);
 
   return (
@@ -43,10 +43,24 @@ export default function App() {
       {!isAuthPage && <Header setToken={setToken} account={account} />}
 
       <Routes>
-        <Route path="/login" element={!token ? <LoginPage setToken={setToken} /> : <Navigate to="/" />} />
-        <Route path="/register" element={!token ? <RegisterPage /> : <Navigate to="/login" />} />
+        <Route
+          path="/login"
+          element={
+            !token ? <LoginPage setToken={setToken} /> : <Navigate to="/" />
+          }
+        />
+        <Route
+          path="/register"
+          element={!token ? <RegisterPage /> : <Navigate to="/login" />}
+        />
 
-        <Route path="/" element={token ? <Shop account={account} /> : <Navigate to="/login" />} />
+        <Route
+          path="/"
+          element={
+            token ? <Shop account={account} /> : <Navigate to="/login" />
+          }
+        />
+        <Route path="/cart" element={<CartOrder />} />
       </Routes>
 
       {!isAuthPage && <Footer />}

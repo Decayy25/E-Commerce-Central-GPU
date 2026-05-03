@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import feather from "feather-icons";
 import { getProducts } from "../api/api";
 import type { Product } from "../types/TypeUI";
 import Input from "../components/atoms/Input";
+import Button from "../components/atoms/Button";
 import Layout from "../components/molecules/Layout";
 import Category from "../components/organisms/CategoryFilter";
-
 
 export default function Shop() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,11 +21,24 @@ export default function Shop() {
   );
 
   const handleAddToCart = (productId: number) => {
-    const product: Product | undefined = products.find(
-      (p) => p.id === productId,
-    );
+    // const product: Product | undefined = products.find(
+    //   (p) => p.id === productId,
+    // );
+    // if (product && product.stock > 0) {
+    //   setCart((prevCart) => [...prevCart, product]);
+    // }
+
+    const product = products.find((p) => p.id === productId);
     if (product && product.stock > 0) {
       setCart((prevCart) => [...prevCart, product]);
+      localStorage.setItem("shopping-cart", JSON.stringify([...cart, product]));
+      
+      // Kurangi stok produk
+      setProducts((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === productId ? { ...p, stock: p.stock - 1 } : p,
+        ),
+      );
     }
   };
 
@@ -53,19 +67,27 @@ export default function Shop() {
 
           {/* Category Filter */}
           <Layout
-            className="flex items-center gap-2"
-            children={<Category />}
+            className="flex items-center"
+            children={
+              <Category
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+              />
+            }
           ></Layout>
 
           {/* Cart Count */}
-          <div className="flex items-center gap-2 bg-green-100 px-4 py-2 rounded">
-            <span className="text-lg font-bold text-[#3079ee] hover:text-[#589c00]">
-              <i data-feather="shopping-cart"></i>
-            </span>
+          <Layout className="flex items-center gap-2 bg-green-100 px-4 py-2 rounded">
+            <Link to="/cart">
+              <span className="text-lg font-bold text-[#3079ee] hover:text-[#589c00]">
+                <i data-feather="shopping-cart"></i>
+              </span>
+            </Link>
+
             <span className="font-medium text-gray-700">
               Cart: {cart.length}
             </span>
-          </div>
+          </Layout>
         </div>
 
         {/* Products Grid */}
@@ -124,13 +146,13 @@ export default function Shop() {
                   </div>
 
                   {/* Add to Cart Button */}
-                  <button
+                  <Button
                     onClick={() => handleAddToCart(product.id)}
                     disabled={product.stock === 0}
-                    className="w-full mt-auto bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 rounded transition-colors duration-300"
+                    className="w-full mt-auto bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 rounded-lg transition-colors duration-300"
                   >
                     {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}

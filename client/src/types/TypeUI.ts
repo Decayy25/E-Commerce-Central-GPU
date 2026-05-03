@@ -52,3 +52,10 @@ export type FormFieldProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   icon: React.ReactNode;
 };
+
+export type CartOrderType = {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}

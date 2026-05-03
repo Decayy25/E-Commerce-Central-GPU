@@ -1,5 +1,5 @@
 import type { RegisterPayload, LoginResponse } from "../types/TypeAuth";
-import type { Response } from "../types/TypeAPI";
+import type { Response, PayProductLoad } from "../types/TypeAPI";
 
 export const getProducts = async () => {
   try {
@@ -39,7 +39,7 @@ export const register = async (payload: RegisterPayload): Promise<Response> => {
     throw new Error(data.message || "Register gagal");
   }
 
-  alert("Berhasil Register")
+  alert("Berhasil Register");
   return data;
 };
 
@@ -83,4 +83,23 @@ export const getAccounts = async () => {
     console.error("Error Fecthing: ", error);
     return [];
   }
+};
+
+export const PayOrder = async (PayProduct: PayProductLoad): Promise<Response> => {
+  const res = await fetch(`${import.meta.env.VITE_API}api/product/payment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(PayProduct),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Proses membayar gagal gagal");
+  }
+
+  alert("Berhasil Membayar");
+  return data;
 };

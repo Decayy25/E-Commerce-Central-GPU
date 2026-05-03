@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FormField } from "../molecules/FormField";
-import { Button } from "../atoms/Button";
+import Button from "../atoms/Button";
 import { register } from "../../api/api";
 import type { RegisterPayload } from "../../types/TypeAuth";
 

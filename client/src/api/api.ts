@@ -65,11 +65,15 @@ export const login = async (
 };
 
 export const getAccounts = async () => {
+  const token = localStorage.getItem("token");
+  console.log("Token being sent:", token);
+
   try {
     const res = await fetch(`${import.meta.env.VITE_API}api/accounts`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
       },
     });
 
@@ -80,7 +84,7 @@ export const getAccounts = async () => {
     const data = await res.json();
     return data;
   } catch (error) {
-    console.error("Error Fecthing: ", error);
+    console.error("Error Fetching: ", error);
     return [];
   }
 };

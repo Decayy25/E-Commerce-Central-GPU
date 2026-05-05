@@ -35,17 +35,16 @@ const app = new Elysia()
             // Auth Group
             .group("/auth", (app) =>
                 app
-                  .post('/login', async ({ body }) => await login(body))
-                  .post('/register', async ({ body }) => await register(body))
-                  .get('/verify-email', async ({ query }) => { return await verifyEmail(query.token)})
+                    .post('/login', async ({ body }) => await login(body))
+                    .post('/register', async ({ body }) => await register(body))
+                    .get('/verify-email', async ({ query }) => { return await verifyEmail(query.token)})
             )
-            .get("/accounts", async ({ body }) => await getAccounts(body))
+            .get("/accounts", async ({ headers }) => await getAccounts(headers))
             .group("/product", (app) => 
                 app
                     .get('/get', async () => await getProduct())
                     .post('/add', async ({ body }) => await addProduct(body))
                     .post('/pay', async ({ body }) => {
-                        // Simulasi proses pembayaran
                         console.log("Processing payment for order:", body);
                         return { success: true, message: "Payment processed successfully" };
                     }
@@ -72,7 +71,7 @@ const app = new Elysia()
                     throw error;
                 }
             })
-        )
+        ))
 
     .onError(({ code, set, error }) => {
         if (code === "NOT_FOUND") {

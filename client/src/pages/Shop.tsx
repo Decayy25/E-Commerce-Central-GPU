@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 import feather from "feather-icons";
 import { getProducts } from "../api/api";
 import type { Product } from "../types/TypeUI";
+import type { Account } from "../types/TypeAuth";
 import Input from "../components/atoms/Input";
 import Button from "../components/atoms/Button";
 import Layout from "../components/molecules/Layout";
 import Category from "../components/organisms/CategoryFilter";
 
-export default function Shop() {
+interface ShopProps {
+  account: Account | null;
+}
+export default function Shop({ account }: ShopProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState<Product[]>([]);
   const [products, setProducts] = useState<Product[]>([]);

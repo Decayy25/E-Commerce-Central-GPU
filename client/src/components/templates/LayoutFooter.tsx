@@ -103,6 +103,7 @@ export default function LayoutFooter() {
             <div className="flex gap-4 text-2xl">
               {Folowme.map((items) => (
                 <a
+                  key={items.id}
                   href={items.social}
                   className="text-gray-800 hover:text-var[(--Radeon)]"
                 >

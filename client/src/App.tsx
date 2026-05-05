@@ -29,9 +29,23 @@ export default function App() {
 
     (async () => {
       const sharedToken = localStorage.getItem("token");
-      if (!sharedToken) return;
+
+      if (!sharedToken) {
+        setAccount(null);
+        return;
+      }
+
       const data = await getAccounts();
-      setAccount(data);
+
+      if (data && !data.error && data.status !== 401) {
+        setAccount(data);
+      } else if (data?.status === 401 || data?.error) {
+        localStorage.removeItem("token");
+        setToken(null);
+        setAccount(null);
+      }
+
+      // HAPUS setAccount(data) yang ada di luar blok if-else ini
     })();
   }, [token]);
 

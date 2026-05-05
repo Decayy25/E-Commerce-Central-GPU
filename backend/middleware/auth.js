@@ -5,16 +5,26 @@ import { sendVerificationEmail } from "../utils/sendVerifMail.js";
 
 export async function register(body) {
   try {
-    if (!body.username || !body.email || !body.phone || !body.birthday || !body.password || !body.confirmPassword) {
+    if (
+      !body.username ||
+      !body.email ||
+      !body.phone ||
+      !body.birthday ||
+      !body.password ||
+      !body.confirmPassword
+    ) {
       return { status: 400, message: "Semua wajib di isi!" };
     }
 
     if (body.password !== body.confirmPassword) {
-      return { status: 400, message: "Password wajib sama dengan Confirm Password" };
+      return {
+        status: 400,
+        message: "Password wajib sama dengan Confirm Password",
+      };
     }
 
     const existing = await db.collection("users").findOne({
-      $or: [{ email: body.email }, { username: body.username }]
+      $or: [{ email: body.email }, { username: body.username }],
     });
 
     if (existing) {
@@ -26,7 +36,7 @@ export async function register(body) {
     const verificationToken = jwt.sign(
       { email: body.email },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     await db.collection("users").insertOne({
@@ -44,9 +54,8 @@ export async function register(body) {
 
     return {
       status: 200,
-      message: "Registrasi berhasil. Silakan cek email untuk verifikasi."
+      message: "Registrasi berhasil. Silakan cek email untuk verifikasi.",
     };
-
   } catch (error) {
     return { status: 500, message: "Terjadi kesalahan saat registrasi" };
   }
@@ -58,7 +67,7 @@ export async function verifyEmail(token) {
 
     const user = await db.collection("users").findOne({
       email: decoded.email,
-      verificationToken: token
+      verificationToken: token,
     });
 
     if (!user) {
@@ -69,8 +78,8 @@ export async function verifyEmail(token) {
       { email: decoded.email },
       {
         $set: { isVerified: true },
-        $unset: { verificationToken: "" }
-      }
+        $unset: { verificationToken: "" },
+      },
     );
 
     return { message: "Email berhasil diverifikasi" };
@@ -85,32 +94,28 @@ export async function login(body) {
       throw new Error("JWT_SECRET belum diset!");
     }
 
-    const user = await db.collection("users")
-      .findOne({ email: body.email });
+    const user = await db.collection("users").findOne({ email: body.email });
 
     if (!user || !user.isVerified) {
       return Response.json(
         { message: "Akun belum di Verifikasi" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
-    const match = await bcrypt.compare(
-      body.password,
-      user.password
-    );
+    const match = await bcrypt.compare(body.password, user.password);
 
     if (!match) {
       return Response.json(
         { message: "Email atau password salah" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
     const token = jwt.sign(
       { id: user._id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     console.log("Login:", body.email);
@@ -119,25 +124,20 @@ export async function login(body) {
       token,
       user: {
         email: user.email,
-        username: user.username
-      }
+        username: user.username,
+      },
     });
-
   } catch (err) {
     return Response.json(
       { message: "terjadi kesalahan pada login" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-export async function getAccounts(body) {
+export async function getAccounts(headers) {
   try {
-    if (!process.env.JWT_SECRET) {
-      throw new Error("JWT_SECRET belum diset!");
-    }
-
-    const authHeader = body.headers.get("Authorization");
+    const authHeader = headers['authorization']; 
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return Response.json(
@@ -147,39 +147,23 @@ export async function getAccounts(body) {
     }
 
     const token = authHeader.split(" ")[1];
-
-    if (!token) {
-      return Response.json(
-        { message: "Token tidak ditemukan" },
-        { status: 401 }
-      );
-    }
-
+    
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await db.collection("users").findOne(
       { email: decoded.email },
-      { projection: { 
-          _id: 0, 
-          email: 1, 
-          username: 1,
-          createdAt: 1 ,
-          isVerified: 1
-        }
-      }
+      { projection: { password: 0 } }
     );
 
     if (!user) {
-      return Response.json(
-        { message: "User tidak ditemukan" },
-        { status: 404 }
-      );
+      return Response.json({ message: "User tidak ditemukan" }, { status: 404 });
     }
 
-      return Response.json(user);
+    return Response.json(user);
   } catch (err) {
+    console.error("JWT Error:", err.message);
     return Response.json(
-      { message: "token tidak valid" },
+      { message: "Token tidak valid atau expired" },
       { status: 401 }
     );
   }

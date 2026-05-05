@@ -4,7 +4,7 @@ import type { Hyperlink } from "../../types/TypeUI";
 
 export default function Hyperlink(props: Hyperlink) {
   const {
-    toLink,
+    toLink = "#",
     Title,
     className = "text-gray-800 hover:text-[#589c00]",
   } = props;

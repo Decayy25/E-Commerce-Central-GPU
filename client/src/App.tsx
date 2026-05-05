@@ -71,7 +71,7 @@ export default function App() {
         <Route
           path="/"
           element={
-            token ? <Shop account={account} /> : <Navigate to="/login" />
+            token ? <Shop /> : <Navigate to="/login" />
           }
         />
         <Route path="/cart" element={<CartOrder />} />

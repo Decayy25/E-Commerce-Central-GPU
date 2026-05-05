@@ -26,7 +26,7 @@ export type LabelProps = {
 
 export type Hyperlink = {
   className?: string;
-  toLink?: string;
+  toLink: string;
   Title?: string;
 };
 
@@ -58,4 +58,6 @@ export type CartOrderType = {
   name: string;
   price: number;
   image: string;
-}
+  quantity: number;
+  stock?: number;
+};

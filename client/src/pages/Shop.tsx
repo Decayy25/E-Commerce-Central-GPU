@@ -3,16 +3,12 @@ import { Link } from "react-router-dom";
 import feather from "feather-icons";
 import { getProducts } from "../api/api";
 import type { Product } from "../types/TypeUI";
-import type { Account } from "../types/TypeAuth";
 import Input from "../components/atoms/Input";
 import Button from "../components/atoms/Button";
 import Layout from "../components/molecules/Layout";
 import Category from "../components/organisms/CategoryFilter";
 
-interface ShopProps {
-  account: Account | null;
-}
-export default function Shop({ account }: ShopProps) {
+export default function Shop() {
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState<Product[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -25,19 +21,18 @@ export default function Shop({ account }: ShopProps) {
   );
 
   const handleAddToCart = (productId: number) => {
-    // const product: Product | undefined = products.find(
-    //   (p) => p.id === productId,
-    // );
-    // if (product && product.stock > 0) {
-    //   setCart((prevCart) => [...prevCart, product]);
-    // }
-
     const product = products.find((p) => p.id === productId);
     if (product && product.stock > 0) {
-      setCart((prevCart) => [...prevCart, product]);
-      localStorage.setItem("shopping-cart", JSON.stringify([...cart, product]));
-      
-      // Kurangi stok produk
+      // 1. Update state cart
+      setCart((prevCart) => {
+        const newCart = [...prevCart, product];
+
+        // 2. Simpan ke localStorage menggunakan data terbaru (newCart)
+        localStorage.setItem("shopping-cart", JSON.stringify(newCart));
+        return newCart;
+      });
+
+      // 3. Kurangi stok produk
       setProducts((prevProducts) =>
         prevProducts.map((p) =>
           p.id === productId ? { ...p, stock: p.stock - 1 } : p,

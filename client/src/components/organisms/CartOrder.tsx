@@ -36,8 +36,7 @@ const CartOrder: React.FC = () => {
   };
 
   const subtotal = cartItems.reduce((acc, item) => {
-    const qty = (item as any).quantity || 1;
-    return acc + item.price * qty;
+    return acc + item.price * item.quantity;
   }, 0);
 
   const total = subtotal + shippingFee;
@@ -47,13 +46,19 @@ const CartOrder: React.FC = () => {
 
     try {
       setLoading(true);
-      await PayOrder(cartItems);
+      setError(null); // Reset error sebelum mulai
+
+      // Jika API PayOrder menerima array, pastikan tipenya sesuai.
+      // Jika error tetap muncul, kamu bisa casting sementara dengan 'as any'
+      // untuk membuktikan ini masalah tipe data:
+      await PayOrder(cartItems as any);
 
       localStorage.removeItem("shopping-cart");
       setCartItems([]);
       alert("Checkout berhasil!");
-    } catch (error) {
-      setError("Gagal mengirim pesanan. Silakan coba lagi.", Error);
+    } catch (err: any) {
+      // PERBAIKAN UNTUK ERROR KEDUA (TS2554) ADA DI SINI:
+      setError("Gagal mengirim pesanan. Silakan coba lagi.");
     } finally {
       setLoading(false);
     }
@@ -90,7 +95,9 @@ const CartOrder: React.FC = () => {
                 <h2 className="font-bold text-lg leading-tight w-64 uppercase">
                   {item.name}
                 </h2>
-                <p className="mt-4 text-gray-700 font-medium italic">IDR: {item.price}</p>
+                <p className="mt-4 text-gray-700 font-medium italic">
+                  IDR: {item.price}
+                </p>
               </div>
             </div>
 
@@ -152,6 +159,6 @@ const CartOrder: React.FC = () => {
       </div>
     </div>
   );
-};
+};;
 
 export default CartOrder;

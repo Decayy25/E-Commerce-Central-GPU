@@ -1,4 +1,3 @@
-import { Elysia } from "elysia";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import path from "path";
@@ -30,4 +29,5 @@ try {
 }
 
 export const db = client.db("myapp");
+export const productsCollection = db.collection("products");
 export const usersCollection = db.collection("users");

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { db } from "../config/db.js";
+import { usersCollection } from "../config/db.js";
 import { sendVerificationEmail } from "../utils/sendVerifMail.js";
 
 export async function register(body) {
@@ -23,7 +23,14 @@ export async function register(body) {
       };
     }
 
-    const existing = await db.collection("users").findOne({
+    if (body.birthday >= 18) {
+      return {
+        status: 400,
+        message: "Umur Belum Cukup!",
+      };
+    }
+
+    const existing = await usersCollection.findOne({
       $or: [{ email: body.email }, { username: body.username }],
     });
 
@@ -39,13 +46,13 @@ export async function register(body) {
       { expiresIn: "1d" },
     );
 
-    await db.collection("users").insertOne({
+    await usersCollection.insertOne({
       username: body.username,
       email: body.email,
       phone: body.phone,
       birthday: body.birthday,
       password: hashed,
-      isVerified: true, // Set to true for testing, change to false in production
+      isVerified: true,
       verificationToken,
       createdAt: new Date(),
     });
@@ -65,7 +72,7 @@ export async function verifyEmail(token) {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await db.collection("users").findOne({
+    const user = await usersCollection.findOne({
       email: decoded.email,
       verificationToken: token,
     });
@@ -74,7 +81,7 @@ export async function verifyEmail(token) {
       return { status: 400, message: "Token tidak valid" };
     }
 
-    await db.collection("users").updateOne(
+    await usersCollection.updateOne(
       { email: decoded.email },
       {
         $set: { isVerified: true },
@@ -88,13 +95,45 @@ export async function verifyEmail(token) {
   }
 }
 
+export async function me(token) {
+  try {
+    if (!token) {
+      return { status: 401, message: "Token tidak ditemukan" };
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await usersCollection.findOne({ email: decoded.email });
+    if (!user) {
+      return { status: 404, message: "User tidak ditemukan" };
+    }
+
+    return {
+      status: 200,
+      message: "Profil user berhasil diambil",
+      data: {
+        email: user.email,
+        username: user.username,
+        fullname: user.fullname,
+        phone: user.phone,
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Token tidak valid atau kadaluarsa",
+      error: error.message,
+    };
+  }
+}
+
 export async function login(body) {
   try {
     if (!process.env.JWT_SECRET) {
       throw new Error("JWT_SECRET belum diset!");
     }
 
-    const user = await db.collection("users").findOne({ email: body.email });
+    const user = await usersCollection.findOne({ email: body.email });
 
     if (!user || !user.isVerified) {
       return Response.json(
@@ -135,36 +174,32 @@ export async function login(body) {
   }
 }
 
-export async function getAccounts(headers) {
+export async function getAccounts() {
   try {
-    const authHeader = headers['authorization']; 
+    const users = await usersCollection
+      .find(
+        {},
+        {
+          projection: {
+            _id: 0,
+            fullname: 1,
+            username: 1,
+            createdAt: 1,
+          },
+        },
+      )
+      .toArray();
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return Response.json(
-        { message: "Format token salah atau tidak ditemukan" },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.split(" ")[1];
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await db.collection("users").findOne(
-      { email: decoded.email },
-      { projection: { password: 0 } }
-    );
-
-    if (!user) {
-      return Response.json({ message: "User tidak ditemukan" }, { status: 404 });
-    }
-
-    return Response.json(user);
-  } catch (err) {
-    console.error("JWT Error:", err.message);
-    return Response.json(
-      { message: "Token tidak valid atau expired" },
-      { status: 401 }
-    );
+    return {
+      status: 200,
+      message: "Data semua akun berhasil diambil",
+      data: users,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: "Terjadi kesalahan saat mengambil data akun",
+      error: error.message,
+    };
   }
 }

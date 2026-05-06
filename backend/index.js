@@ -1,9 +1,8 @@
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
-import { register, login, getAccounts } from "./middleware/auth.js";
-import { usersCollection } from './config/db.js';
+import { register, login, getAccounts, me } from "./middleware/auth.js";
 import { sendContactMail } from "./utils/sendMail.js";
-import { addProduct, getProduct } from "./controller/product.js";
+import { addProduct, getProduct, putProduct, delProduct } from "./controller/product.js";
 import dotenv from "dotenv";
 import path from "path";
 
@@ -16,62 +15,52 @@ if (process.env.NODE_ENV !== 'production') {
 
 const app = new Elysia()
     .use(cors({
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        credentials: true
-    }))
-
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+    }),
+    )
 
     .get("/", () => ({
         status: "Online",
         message: "Elysia Backend is running perfectly!",
-        database: process.env.MONGO_URI ? "Connected (Env OK)" : "Missing Env"
+        database: process.env.MONGO_URI ? "Connected (Env OK)" : "Missing Env",
     }))
-
 
     .group("/api", (app) =>
         app
-            // Auth Group
-            .group("/auth", (app) =>
-                app
-                    .post('/login', async ({ body }) => await login(body))
-                    .post('/register', async ({ body }) => await register(body))
-                    .get('/verify-email', async ({ query }) => { return await verifyEmail(query.token)})
-            )
-            .get("/accounts", async ({ headers }) => await getAccounts(headers))
-            .group("/product", (app) => 
-                app
-                    .get('/get', async () => await getProduct())
-                    .post('/add', async ({ body }) => await addProduct(body))
-                    .post('/pay', async ({ body }) => {
-                        console.log("Processing payment for order:", body);
-                        return { success: true, message: "Payment processed successfully" };
-                    }
-                )
+        .group("/auth", (app) =>
+            app
+            .post("/login", async ({ body }) => await login(body))
+            .post("/register", async ({ body }) => await register(body))
+            .get("/verify-email", async ({ query }) => await verifyEmail(query.token))
+            .get("/accounts", async () => await getAccounts())
+            .get("/me", async ({ query }) => await me(query))
+        )
+        
+        .group("/product", (app) =>
+            app
+            .get("/get", async () => await getProduct())
+            .post("/add", async ({ body }) => await addProduct(body))
+            .put("/put", async ({ body }) => await putProduct(body))
+            .delete("/del", async ({ body }) => await delProduct(body))
+        )
 
-            .get("/me", async ({ query }) => {
-                try {
-                    const user = await usersCollection.findOne({ email: query.email });
-                    return user || { error: "User tidak ditemukan" };
-                } catch (error) {
-                    return { error: error.message };
-                }
-            })
+        .group("/account", (app) =>
+            app
+                .get("/get", async () => await getAccount())
+                .post("/add", async ({ body }) => await addAccount(body))
+                .put("/put", async ({ body }) => await putAccount(body))
+                .delete("/del", async ({ body }) => await delAccount(body)),
+        )
 
-            .post("/contact", async ({ body }) => {
-                try {
-                    await sendContactMail(body);
-                    await mailHistory(body);
-                    return { 
-                        success: true, 
-                        message: "Pesan berhasil dikirim" 
-                    };
-                } catch (error) {
-                    throw error;
-                }
-            })
-        ))
+        .group("/contact", (app) =>
+            app
+                .post("/send", async ({ body }) => sendContactMail(body))
+                .post("/whatsapp", async ({ body }) => sendWhatsappMessage(body))
+        )
+    )
 
     .onError(({ code, set, error }) => {
         if (code === "NOT_FOUND") {
@@ -81,19 +70,19 @@ const app = new Elysia()
         console.error("Global Error:", error);
         return {
             status: 500,
-            error: error.message
+            error: error.message,
         };
     });
 
 export default app;
 
 if (process.env.NODE_ENV !== 'production') {
-  app.listen(process.env.PORT);
-  console.log(`\x1b[32m
-  +==================================================+
-  ✅ Elysia Server running!
-  🌐 http://localhost:${process.env.PORT}
-  📂 File: index.js
-  +==================================================+
+    app.listen(process.env.PORT);
+    console.log(`\x1b[32m
+    +==================================================+
+    ✅ Elysia Server running!
+    🌐 http://localhost:${process.env.PORT}
+    📂 File: index.js
+    +==================================================+
 `);
 }

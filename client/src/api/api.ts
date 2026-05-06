@@ -66,10 +66,9 @@ export const login = async (
 
 export const getAccounts = async () => {
   const token = localStorage.getItem("token");
-  console.log("Token being sent:", token);
 
   try {
-    const res = await fetch(`${import.meta.env.VITE_API}api/accounts`, {
+    const res = await fetch(`${import.meta.env.VITE_API}api/auth/accounts`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

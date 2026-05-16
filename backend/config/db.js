@@ -1,15 +1,8 @@
 import { MongoClient } from "mongodb";
-import dotenv from "dotenv";
-import path from "path";
-
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config({
-    path: path.resolve(process.cwd(), "../.env")
-  });
-}
+import { MONGO_URI } from "../utils/env.js"
 
 
-const uri = process.env.MONGO_URI;
+const uri = MONGO_URI;
 
 const client = new MongoClient(uri, {
   serverSelectionTimeoutMS: 10000,

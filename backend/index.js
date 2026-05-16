@@ -1,16 +1,16 @@
+import { NODE_ENV, PORT } from "./utils/env.js";
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
-import { register, login, getAccounts, me } from "./middleware/auth.js";
+import { register, login, getAccounts, me, verifyEmail } from "./middleware/auth.js";
 import { sendContactMail } from "./utils/sendMail.js";
 import { addProduct, getProduct, putProduct, delProduct } from "./controller/product.js";
-import dotenv from "dotenv";
-import path from "path";
 
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config({
-    path: path.resolve(process.cwd(), "../.env")
-  });
-}
+
+// if (NODE_ENV !== 'production') {
+//   dotenv.config({
+//     path: path.resolve(process.cwd(), "../.env")
+//   });
+// }
 
 
 const app = new Elysia()
@@ -36,7 +36,14 @@ const app = new Elysia()
             .post("/register", async ({ body }) => await register(body))
             .get("/verify-email", async ({ query }) => await verifyEmail(query.token))
             .get("/accounts", async () => await getAccounts())
-            .get("/me", async ({ query }) => await me(query))
+            .get("/me", async ({ headers, set }) => {
+                const token = headers['authorization']; 
+                const result = await me({ token });
+                if (result.status) { 
+                    set.status = result.status;
+                }
+                return result;
+            })
         )
         
         .group("/product", (app) =>
@@ -76,12 +83,12 @@ const app = new Elysia()
 
 export default app;
 
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(process.env.PORT);
+if (NODE_ENV !== 'production') {
+    app.listen(PORT);
     console.log(`\x1b[32m
     +==================================================+
     ✅ Elysia Server running!
-    🌐 http://localhost:${process.env.PORT}
+    🌐 http://localhost:${PORT}
     📂 File: index.js
     +==================================================+
 `);

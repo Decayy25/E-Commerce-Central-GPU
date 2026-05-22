@@ -13,9 +13,10 @@ export type Product = {
 };
 
 export type LogoProps = {
-  logo?: string;
-  className?: string;
+  logo: string;
+  className: string;
   loading?: string;
+  location?: string;
 };
 
 export type LabelProps = {
@@ -61,3 +62,4 @@ export type CartOrderType = {
   quantity: number;
   stock?: number;
 };
+

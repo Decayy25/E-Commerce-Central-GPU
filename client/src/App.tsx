@@ -9,7 +9,8 @@ import Footer from "./components/organisms/Footer";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Shop from "./pages/Shop";
-import CartOrder from "./components/organisms/CartOrder";
+import Cart from "./pages/Cart"
+
 
 // Desain & Library
 import feather from "feather-icons";
@@ -17,11 +18,26 @@ import "devicon/devicon.min.css";
 import "./index.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import LoadingScreen from "./components/organisms/Loading";
 
-export default function App() {
+export const App: React.FC = () => {
   const [account, setAccount] = useState<Account | null>(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [IsLoading, setIsLoading] = useState<boolean>(true);
   const location = useLocation();
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 800)
+
+    return () => clearTimeout(timer)
+  }, [location.pathname]);
+
+
+
 
   useEffect(() => {
     AOS.init({ duration: 800, easing: "ease-in-out", once: false });
@@ -44,13 +60,13 @@ export default function App() {
         setToken(null);
         setAccount(null);
       }
-
-      // HAPUS setAccount(data) yang ada di luar blok if-else ini
     })();
   }, [token]);
 
   const hiddenHeaderFooter = ["/login", "/register", "/cart"];
   const isAuthPage = hiddenHeaderFooter.includes(location.pathname);
+
+  if(IsLoading) return <LoadingScreen />
 
   return (
     <div className="flex flex-col w-full min-h-screen">
@@ -68,16 +84,13 @@ export default function App() {
           element={!token ? <RegisterPage /> : <Navigate to="/login" />}
         />
 
-        <Route
-          path="/"
-          element={
-            token ? <Shop /> : <Navigate to="/login" />
-          }
-        />
-        <Route path="/cart" element={<CartOrder />} />
+        <Route path="/" element={token ? <Shop /> : <Navigate to="/login" />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
 
       {!isAuthPage && <Footer />}
     </div>
   );
-}
+};
+
+export default App;

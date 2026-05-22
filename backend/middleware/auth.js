@@ -1,8 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sendVerificationEmail } from "../utils/sendVerifMail.js";
 import { usersCollection } from "../config/db.js";
-import { JWT_SECRET } from "../utils/env.js";
+import { sendVerificationEmail } from "../utils/sendVerifMail.js";
 
 export async function register(body) {
   try {
@@ -41,9 +40,11 @@ export async function register(body) {
 
     const hashed = await bcrypt.hash(body.password, 10);
 
-    const verificationToken = jwt.sign({ email: body.email }, JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const verificationToken = jwt.sign(
+      { email: body.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" },
+    );
 
     await usersCollection.insertOne({
       username: body.username,
@@ -51,7 +52,7 @@ export async function register(body) {
       phone: body.phone,
       birthday: body.birthday,
       password: hashed,
-      isVerified: false,
+      isVerified: true,
       verificationToken,
       createdAt: new Date(),
     });
@@ -69,7 +70,7 @@ export async function register(body) {
 
 export async function verifyEmail(token) {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await usersCollection.findOne({
       email: decoded.email,
@@ -94,23 +95,10 @@ export async function verifyEmail(token) {
   }
 }
 
-export async function me(body) {
-  let token = body?.token;
-
+export async function me(token) {
   try {
     if (!token) {
-      return {
-        status: 401,
-        message: "Token tidak ditemukan atau format salah",
-      };
-    }
-
-    if (typeof token === "string" && token.startsWith("Bearer ")) {
-      token = token.slice(7, token.length).trim();
-    }
-
-    if (!token) {
-      return { status: 401, message: "Token kosong" };
+      return { status: 401, message: "Token tidak ditemukan" };
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -126,22 +114,14 @@ export async function me(body) {
       data: {
         email: user.email,
         username: user.username,
+        fullname: user.fullname,
         phone: user.phone,
       },
     };
   } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      return {
-        status: 401,
-        message: "Token sudah kedaluwarsa, silakan login ulang",
-      };
-    }
-    if (error.name === "JsonWebTokenError") {
-      return { status: 401, message: "Token tidak valid atau rusak" };
-    }
     return {
       status: 500,
-      message: "Terjadi kesalahan internal server",
+      message: "Token tidak valid atau kadaluarsa",
       error: error.message,
     };
   }
@@ -149,7 +129,7 @@ export async function me(body) {
 
 export async function login(body) {
   try {
-    if (!JWT_SECRET) {
+    if (!process.env.JWT_SECRET) {
       throw new Error("JWT_SECRET belum diset!");
     }
 
@@ -171,9 +151,11 @@ export async function login(body) {
       );
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" },
+    );
 
     console.log("Login:", body.email);
 

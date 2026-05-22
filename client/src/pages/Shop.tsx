@@ -23,16 +23,33 @@ export default function Shop() {
   const handleAddToCart = (productId: number) => {
     const product = products.find((p) => p.id === productId);
     if (product && product.stock > 0) {
-      // 1. Update state cart
       setCart((prevCart) => {
-        const newCart = [...prevCart, product];
+        const savedCart = localStorage.getItem("shopping-cart");
+        const currentCart: any[] = savedCart ? JSON.parse(savedCart) : prevCart;
 
-        // 2. Simpan ke localStorage menggunakan data terbaru (newCart)
+        const isItemExist = currentCart.find((item) => item.id === productId);
+        let newCart;
+
+        if (isItemExist) {
+          newCart = currentCart.map((item) =>
+            item.id === productId
+              ? {
+                  ...item,
+                  quantity: Math.min(item.stock, (item.quantity || 1) + 1),
+                }
+              : item,
+          );
+        } else {
+          newCart = [
+            ...currentCart,
+            { ...product, quantity: 1, stock: product.stock },
+          ];
+        }
+
         localStorage.setItem("shopping-cart", JSON.stringify(newCart));
         return newCart;
       });
 
-      // 3. Kurangi stok produk
       setProducts((prevProducts) =>
         prevProducts.map((p) =>
           p.id === productId ? { ...p, stock: p.stock - 1 } : p,
@@ -40,9 +57,14 @@ export default function Shop() {
       );
     }
   };
-
   useEffect(() => {
     feather.replace();
+
+    // Membaca data keranjang lama dari localStorage saat halaman pertama kali dibuka
+    const savedCart = localStorage.getItem("shopping-cart");
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
 
     (async () => {
       const data = await getProducts();

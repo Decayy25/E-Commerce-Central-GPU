@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { usersCollection } from "../config/db.js";
 import { sendVerificationEmail } from "../utils/sendVerifMail.js";
+import { JWT_SECRET } from "../utils/env.js";
 
 export async function register(body) {
   try {
@@ -42,7 +43,7 @@ export async function register(body) {
 
     const verificationToken = jwt.sign(
       { email: body.email },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "1d" },
     );
 
@@ -70,7 +71,7 @@ export async function register(body) {
 
 export async function verifyEmail(token) {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     const user = await usersCollection.findOne({
       email: decoded.email,
@@ -101,7 +102,7 @@ export async function me(token) {
       return { status: 401, message: "Token tidak ditemukan" };
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     const user = await usersCollection.findOne({ email: decoded.email });
     if (!user) {
@@ -129,7 +130,7 @@ export async function me(token) {
 
 export async function login(body) {
   try {
-    if (!process.env.JWT_SECRET) {
+    if (!JWT_SECRET) {
       throw new Error("JWT_SECRET belum diset!");
     }
 
@@ -153,7 +154,7 @@ export async function login(body) {
 
     const token = jwt.sign(
       { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "1d" },
     );
 

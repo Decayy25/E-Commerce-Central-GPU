@@ -6,13 +6,6 @@ import { sendContactMail } from "./utils/sendMail.js";
 import { addProduct, getProduct, putProduct, delProduct } from "./controller/product.js";
 
 
-// if (NODE_ENV !== 'production') {
-//   dotenv.config({
-//     path: path.resolve(process.cwd(), "../.env")
-//   });
-// }
-
-
 const app = new Elysia()
     .use(cors({
         origin: "*",
@@ -54,18 +47,10 @@ const app = new Elysia()
             .delete("/del", async ({ body }) => await delProduct(body))
         )
 
-        .group("/account", (app) =>
-            app
-                .get("/get", async () => await getAccount())
-                .post("/add", async ({ body }) => await addAccount(body))
-                .put("/put", async ({ body }) => await putAccount(body))
-                .delete("/del", async ({ body }) => await delAccount(body)),
-        )
-
         .group("/contact", (app) =>
             app
                 .post("/send", async ({ body }) => sendContactMail(body))
-                .post("/whatsapp", async ({ body }) => sendWhatsappMessage(body))
+                // .post("/whatsapp", async ({ body }) => sendWhatsappMessage(body))
         )
     )
 

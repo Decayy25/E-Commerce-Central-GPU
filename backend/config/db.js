@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import { MONGO_URI } from "../utils/environtment.js"
 
-const uri = MONGO_URI;
+const uri = MONGO_URI || process.env.MONGO_URI;
 
 const client = new MongoClient(uri, {
   serverSelectionTimeoutMS: 10000,

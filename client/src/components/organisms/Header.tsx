@@ -26,30 +26,16 @@ export default function Header({ setToken }: HeaderProps) {
 
   return (
     <header className="w-full bg-[#589c00] text-white border-b border-white fixed top-0 left-0 z-50">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-5 md:grid md:grid-cols-3">
-
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-5 md:grid md:grid-cols-2">
         {/* Logo */}
         <h1 className="text-xl font-bold justify-self-start ml-[-20px] md:ml-[-40px] md:text-4xl">
           Central GPU
         </h1>
 
-        {/* Search */}
-        <div className="flex items-center bg-gray-100 rounded-md md:h-12 h-10 px-3 py-3 w-full max-w-md md:max-w-2xl lg:max-w-6xl ml-auto md:mx-auto">
-          <span className="text-[#589c00] text-2xl mr-4"><i data-feather="search"></i></span>
-
-          <input
-            type="text"
-            placeholder="Search"
-            className="bg-transparent flex-1 outline-none text-gray-700 text-lg border-b-2 border-[#589c00]"
-          />
-        </div>
-
         {/* Right Section */}
         <div className="flex items-center gap-6 ml-auto">
-
           {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-6 text-lg">
-
             <Link to="/" className="hover:text-green-200 transition">
               Shop
             </Link>
@@ -69,7 +55,6 @@ export default function Header({ setToken }: HeaderProps) {
             >
               Logout
             </button>
-
           </nav>
 
           {/* Hamburger Mobile */}
@@ -79,9 +64,7 @@ export default function Header({ setToken }: HeaderProps) {
           >
             ☰
           </button>
-
         </div>
-
       </div>
 
       {/* Mobile Menu */}
@@ -91,7 +74,6 @@ export default function Header({ setToken }: HeaderProps) {
         }`}
       >
         <ul className="flex flex-col px-6 py-3">
-
           <li>
             <Link
               to="/"
@@ -128,10 +110,8 @@ export default function Header({ setToken }: HeaderProps) {
               Logout
             </Button>
           </li>
-
         </ul>
       </nav>
-
     </header>
   );
 }

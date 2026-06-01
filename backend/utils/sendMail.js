@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { EMAIL_PASS, EMAIL_USER } from "./env";
+import { EMAIL_PASS, EMAIL_USER } from "./environtment.js";
 
 export async function sendContactMail({ name, email, message }) {
     const transporter = nodemailer.createTransport({

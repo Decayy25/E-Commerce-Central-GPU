@@ -1,4 +1,4 @@
-import { NODE_ENV, PORT } from "./utils/env.js";
+import { NODE_ENV, PORT, MONGO_URI } from "./utils/environtment.js";
 import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 import { register, login, getAccounts, me, verifyEmail } from "./middleware/auth.js";
@@ -18,7 +18,7 @@ const app = new Elysia()
     .get("/", () => ({
         status: "Online",
         message: "Elysia Backend is running perfectly!",
-        database: process.env.MONGO_URI ? "Connected (Env OK)" : "Missing Env",
+        database: MONGO_URI ? "Connected (Env OK)" : "Missing Env",
     }))
 
     .group("/api", (app) =>

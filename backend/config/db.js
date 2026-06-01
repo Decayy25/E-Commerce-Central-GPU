@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { MONGO_URI } from "../utils/env.js"
+import { MONGO_URI } from "../utils/environtment.js"
 
 const uri = MONGO_URI;
 

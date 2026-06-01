@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { usersCollection } from "../config/db.js";
 import { sendVerificationEmail } from "../utils/sendVerifMail.js";
-import { JWT_SECRET } from "../utils/env.js";
+import { JWT_SECRET } from "../utils/environtment.js";
 
 export async function register(body) {
   try {

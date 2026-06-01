@@ -1,16 +1,17 @@
 import nodemailer from "nodemailer";
+import { EMAIL_PASS, EMAIL_USER } from "./env";
 
 export async function sendContactMail({ name, email, message }) {
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
+            user: EMAIL_USER,
+            pass: EMAIL_PASS
         }
     });
 
     await transporter.sendMail({
-        from: `"${name}" <${process.env.EMAIL_USER}>`, 
+        from: `"${name}" <${EMAIL_USER}>`, 
         replyTo: email,
         to: "smartcicalengka02@gmail.com",
         subject: "Pesan Baru dari SMArT CLK",

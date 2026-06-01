@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { EMAIL_PASS, EMAIL_USER, VITE_URL } from "./env";
+import { EMAIL_PASS, EMAIL_USER, VITE_URL } from "./env.js";
 
 export async function sendVerificationEmail(email, token) {
   const transporter = nodemailer.createTransport({

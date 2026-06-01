@@ -1,4 +1,3 @@
-import { Link, Navigate } from "react-router-dom";
 import Layout from "../components/molecules/Layout";
 import CartOrder from "../components/organisms/CartOrder"
 

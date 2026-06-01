@@ -27,7 +27,7 @@ const CartOrder: React.FC = () => {
   const updateQty = (id: number, delta: number) => {
     const newCart = cartItems.map((item) => {
       if (item.id === id) {
-        const currentQty = (item as any).quantity || 1;
+        const currentQty = item.quantity || 1;
         return { ...item, quantity: Math.max(1, currentQty + delta) };
       }
       return item;
@@ -48,13 +48,13 @@ const CartOrder: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      await PayOrder(cartItems as any);
+      await PayOrder(cartItems);
 
       localStorage.removeItem("shopping-cart");
       setCartItems([]);
       alert("Checkout berhasil!");
-    } catch (error) {
-      setError("Gagal mengirim pesanan. Silakan coba lagi.", error);
+    } catch {
+      setError("Gagal mengirim pesanan. Silakan coba lagi.");
     } finally {
       setLoading(false);
     }
@@ -106,9 +106,7 @@ const CartOrder: React.FC = () => {
                 >
                   +
                 </button>
-                <div className="px-6 font-bold">
-                  {(item as any).quantity || 1}
-                </div>
+                <div className="px-6 font-bold">{item.quantity || 1}</div>
                 <button
                   onClick={() => updateQty(item.id, -1)}
                   className="px-3 border-l border-blue-400 text-red-500 font-bold hover:bg-gray-50"
@@ -136,7 +134,7 @@ const CartOrder: React.FC = () => {
         <div className="border-t-2 border-blue-500 mb-6"></div>
 
         <div className="flex flex-col items-end gap-6">
-          <div className="flex justify-between items-center w-full max-w-[400px]">
+          <div className="flex justify-between items-center w-full max-w-100">
             <span className="text-2xl font-black italic uppercase tracking-tighter text-gray-900">
               Total
             </span>
@@ -157,6 +155,6 @@ const CartOrder: React.FC = () => {
       </div>
     </Fragment>
   );
-};;
+};
 
 export default CartOrder;

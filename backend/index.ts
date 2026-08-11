@@ -8,7 +8,7 @@ import { addProduct, getProduct, putProduct, delProduct } from "./controller/pro
 const app = new Elysia()
   .use(
     cors({
-      origin: "*",
+      origin: "https://e-commerce-central-gpu.vercel.app/",
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,

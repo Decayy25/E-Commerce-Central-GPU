@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
-import { EMAIL_PASS, EMAIL_USER, VITE_URL } from "./environtment.js";
+import { EMAIL_PASS, EMAIL_USER, VITE_URL } from "./environtment";
 
-export async function sendVerificationEmail(email, token) {
+export async function sendVerificationEmail(email: string, token: string): Promise<void> {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {

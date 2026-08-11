@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { usersCollection } from "../config/db.js";
-import { sendVerificationEmail } from "../utils/sendVerifMail.js";
-import { JWT_SECRET } from "../utils/environtment.js";
+import { usersCollection } from "../config/db";
+import { sendVerificationEmail } from "../utils/sendVerifMail";
+import { JWT_SECRET } from "../utils/environtment";
 
-export async function register(body) {
+export async function register(body: any): Promise<any> {
   try {
     if (
       !body.username ||
@@ -53,7 +53,7 @@ export async function register(body) {
       phone: body.phone,
       birthday: body.birthday,
       password: hashed,
-      isVerified: true,
+      isVerified: false,
       verificationToken,
       createdAt: new Date(),
     });
@@ -69,9 +69,9 @@ export async function register(body) {
   }
 }
 
-export async function verifyEmail(token) {
+export async function verifyEmail(token: any): Promise<any> {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
 
     const user = await usersCollection.findOne({
       email: decoded.email,
@@ -96,13 +96,14 @@ export async function verifyEmail(token) {
   }
 }
 
-export async function me(token) {
+export async function me(tokenObj: any): Promise<any> {
   try {
+    const token = tokenObj?.token;
     if (!token) {
       return { status: 401, message: "Token tidak ditemukan" };
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
 
     const user = await usersCollection.findOne({ email: decoded.email });
     if (!user) {
@@ -119,7 +120,7 @@ export async function me(token) {
         phone: user.phone,
       },
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       status: 500,
       message: "Token tidak valid atau kadaluarsa",
@@ -128,7 +129,7 @@ export async function me(token) {
   }
 }
 
-export async function login(body) {
+export async function login(body: any): Promise<Response> {
   try {
     if (!JWT_SECRET) {
       throw new Error("JWT_SECRET belum diset!");
@@ -175,7 +176,7 @@ export async function login(body) {
   }
 }
 
-export async function getAccounts() {
+export async function getAccounts(): Promise<any> {
   try {
     const users = await usersCollection
       .find(
@@ -196,7 +197,7 @@ export async function getAccounts() {
       message: "Data semua akun berhasil diambil",
       data: users,
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       status: 500,
       message: "Terjadi kesalahan saat mengambil data akun",

@@ -1,7 +1,7 @@
-import { productsCollection } from "../config/db.js";
+import { productsCollection } from "../config/db";
 
 // CRUD
-export async function getProduct() {
+export async function getProduct(): Promise<any[]> {
   try {
     const products = await productsCollection.find().toArray();
     return products;
@@ -10,7 +10,7 @@ export async function getProduct() {
   }
 }
 
-export async function addProduct(body) {
+export async function addProduct(body: any): Promise<any> {
   const {
     id,
     name,
@@ -60,7 +60,7 @@ export async function addProduct(body) {
       productId: result.insertedId,
       id,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error adding product:", error);
     return {
       status: 500,
@@ -71,7 +71,7 @@ export async function addProduct(body) {
   }
 }
 
-export async function delProduct(body) {
+export async function delProduct(body: any): Promise<any> {
   try {
     const { id } = body;
 
@@ -87,7 +87,7 @@ export async function delProduct(body) {
   }
 }
 
-export async function putProduct(body) {
+export async function putProduct(body: any): Promise<any> {
   const {
     id,
     name,

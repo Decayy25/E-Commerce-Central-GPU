@@ -27,17 +27,19 @@ export const App: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    setIsLoading(true);
+    const showTimer = setTimeout(() => {
+      setIsLoading(true);
+    }, 0);
 
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+    const hideTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
   }, [location.pathname]);
-
-
-
 
   useEffect(() => {
     AOS.init({ duration: 800, easing: "ease-in-out", once: false });
@@ -63,7 +65,7 @@ export const App: React.FC = () => {
     })();
   }, [token]);
 
-  const hiddenHeaderFooter = ["/login", "/register", "/cart"];
+  const hiddenHeaderFooter = ["/login", "/register"];
   const isAuthPage = hiddenHeaderFooter.includes(location.pathname);
 
   if(IsLoading) return <LoadingScreen />
@@ -85,7 +87,7 @@ export const App: React.FC = () => {
         />
 
         <Route path="/" element={token ? <Shop /> : <Navigate to="/login" />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/cart" element={token ? <Cart /> : <Navigate to="/login" />} />
       </Routes>
 
       {!isAuthPage && <Footer />}

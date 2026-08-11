@@ -1,13 +1,13 @@
 import { payHistoryCollection } from "../config/db";
 
 // Get
-export const getHistoryUser = async () => {
+export const getHistoryUser = async (): Promise<any> => {
   try {
-    const result = payHistoryCollection.findOne("history");
+    const result = await payHistoryCollection.findOne({});
     if (!result) return "Tidak ada history";
 
     return result;
-  } catch (error) {
+  } catch (error: any) {
     return {
       status: 500,
       message: "Terjadi kesalahan saat mengambil riwayat pembelian",
@@ -18,7 +18,7 @@ export const getHistoryUser = async () => {
 };
 
 // POST
-export const postHistoryUser = async (body) => {
+export const postHistoryUser = async (body: any): Promise<any> => {
   const { id, email, methodPay, username, createdAt, listProduct } = body;
 
   if (
@@ -55,7 +55,7 @@ export const postHistoryUser = async (body) => {
       success: true,
       data: product,
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       status: 500,
       message: "Terjadi kesalahan saat menambahkan riwayat pembelian",
@@ -66,13 +66,13 @@ export const postHistoryUser = async (body) => {
 };
 
 // DELETE
-export const delHistoryUser = async (body) => {
+export const delHistoryUser = async (body: any): Promise<any> => {
   try {
     const { id } = body;
 
-    const result = payHistoryCollection.deleteOne({ id: id });
+    const result = await payHistoryCollection.deleteOne({ id: id });
 
-    if (result.deleteCount === 0) {
+    if (result.deletedCount === 0) {
       return {
         success: false,
         message: "Tidak ada history",

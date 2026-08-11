@@ -1,7 +1,12 @@
 import { MongoClient } from "mongodb";
-import { MONGO_URI } from "../utils/environtment.js"
+import { MONGO_URI } from "../utils/environtment";
 
-const uri = MONGO_URI || process.env.MONGO_URI;
+const uri = MONGO_URI;
+
+if (!uri) {
+  console.error("❌ MONGO_URI is not defined in environment variables.");
+  process.exit(1);
+}
 
 const client = new MongoClient(uri, {
   serverSelectionTimeoutMS: 10000,
@@ -11,10 +16,10 @@ const client = new MongoClient(uri, {
 try {
   await client.connect();
   console.log(`\x1b[32m
-        +==================================================+
-        ✅ MongoDB Connected
-        +==================================================+
-        `);
++==================================================+
+✅ MongoDB Connected
++==================================================+
+`);
 } catch (err) {
   console.error("❌ MongoDB Gagal Connect: ", err);
   process.exit(1);

@@ -19,7 +19,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ setToken }) => {
            </div>
         </div>
 
-        {/* 3. Oper setToken ke LoginForm */}
         <LoginForm setToken={setToken} />
 
         <div className="mt-6 flex gap-1 items-center">
